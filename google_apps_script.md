@@ -79,4 +79,5 @@ function doGet(e) {
    return HtmlService.createHtmlOutput("Веб-додаток для обробки форми аптек працює. Використовуйте POST-запити для надсилання даних.");
 }
 
+ 88888
  
