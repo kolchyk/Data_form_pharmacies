@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма збору даних аптек</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Форма збору даних про кадровий склад аптек</h1>
+
+        <form id="apteka-form">
+            <div class="form-group">
+                <label for="oblast">1. Область:</label>
+                <select id="oblast" name="oblast" required>
+                    <option value="" disabled selected>-- Оберіть область --</option>
+                    <!-- Опції будуть завантажені з JSON -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="city">2. Населений пункт:</label>
+                <select id="city" name="city" required disabled>
+                    <option value="" disabled selected>-- Спочатку оберіть область --</option>
+                    <!-- Опції будуть завантажені динамічно -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="apteka">3. Адреса та назва аптечного закладу:</label>
+                <select id="apteka" name="apteka" required disabled>
+                    <option value="" disabled selected>-- Спочатку оберіть населений пункт --</option>
+                    <!-- Опції будуть завантажені динамічно -->
+                </select>
+            </div>
+
+            <!-- Додаткові поля (приховані спочатку) -->
+            <div id="additional-fields" style="display: none;">
+                <hr>
+                <h2>Детальна інформація про аптеку</h2>
+
+                <div class="form-group">
+                    <label for="edrpou">4. Код ЄДРПОУ:</label>
+                    <input type="text" id="edrpou" name="edrpou" pattern="\d{8,10}" title="Введіть 8 або 10 цифр ЄДРПОУ" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="network_name">5. Назва аптечної мережі або назва аптеки:</label>
+                    <input type="text" id="network_name" name="network_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="ownership">6. Форма власності:</label>
+                     <!-- Варіант з select -->
+                    <select id="ownership" name="ownership" required>
+                        <option value="" disabled selected>-- Оберіть форму власності --</option>
+                        <option value="Приватна">Приватна</option>
+                        <option value="Комунальна">Комунальна</option>
+                        <option value="Державна">Державна</option>
+                        <option value="Інша">Інша</option>
+                    </select>
+                    <!-- Або варіант з radio -->
+                    <!--
+                    <div class="radio-group">
+                        <input type="radio" id="owner_private" name="ownership" value="Приватна" required><label for="owner_private">Приватна</label>
+                        <input type="radio" id="owner_communal" name="ownership" value="Комунальна"><label for="owner_communal">Комунальна</label>
+                        <input type="radio" id="owner_state" name="ownership" value="Державна"><label for="owner_state">Державна</label>
+                         <input type="radio" id="owner_other" name="ownership" value="Інша"><label for="owner_other">Інша</label>
+                    </div>
+                    -->
+                </div>
+
+                <div class="form-group">
+                    <label for="apteka_type">7. Тип аптечного закладу:</label>
+                     <!-- Варіант з select -->
+                     <select id="apteka_type" name="apteka_type" required>
+                        <option value="" disabled selected>-- Оберіть тип --</option>
+                        <option value="Аптека">Аптека</option>
+                        <option value="Аптечний пункт">Аптечний пункт</option>
+                        <option value="Аптечний кіоск">Аптечний кіоск</option>
+                        <option value="Інше">Інше</option>
+                    </select>
+                    <!-- Або варіант з radio -->
+                    <!--
+                    <div class="radio-group">
+                        <input type="radio" id="type_apteka" name="apteka_type" value="Аптека" required><label for="type_apteka">Аптека</label>
+                        <input type="radio" id="type_punkt" name="apteka_type" value="Аптечний пункт"><label for="type_punkt">Аптечний пункт</label>
+                        <input type="radio" id="type_kiosk" name="apteka_type" value="Аптечний кіоск"><label for="type_kiosk">Аптечний кіоск</label>
+                         <input type="radio" id="type_other" name="apteka_type" value="Інше"><label for="type_other">Інше</label>
+                    </div>
+                    -->
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">8. Контактний номер телефону:</label>
+                    <input type="tel" id="phone" name="phone" pattern="[\+]?3?8? ?[(]?\d{3}[)]?[- ]?\d{3}[- ]?\d{2}[- ]?\d{2}" title="Введіть дійсний український номер телефону" placeholder="+38 (XXX) XXX-XX-XX" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="staff_total">9. Кількість фарм працівників, що працюють в аптечному пункті (всього):</label>
+                    <input type="number" id="staff_total" name="staff_total" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="staff_esoz">10. Кількість фарм працівників, зареєстрованих в системі ЕСОЗ:</label>
+                    <input type="number" id="staff_esoz" name="staff_esoz" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label>11. Чи використовує аптечний заклад інформаційну систему, сумісну з ЕСОЗ?</label>
+                    <div class="radio-group">
+                        <input type="radio" id="esoz_yes" name="esoz_compatible" value="Так" required>
+                        <label for="esoz_yes">Так</label>
+                        <input type="radio" id="esoz_no" name="esoz_compatible" value="Ні">
+                        <label for="esoz_no">Ні</label>
+                    </div>
+                </div>
+
+                <div class="form-group" id="is_name_group" style="display: none;"> <!-- Приховано спочатку -->
+                    <label for="is_name">12. Назва медичної/аптечної ІС, яка використовується (якщо є):</label>
+                    <input type="text" id="is_name" name="is_name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" id="submit-btn">Надіслати</button>
+            </div>
+        </form>
+
+        <div id="message-container" class="message"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
