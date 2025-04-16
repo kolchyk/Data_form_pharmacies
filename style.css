@@ -2,15 +2,48 @@
 body {
     font-family: sans-serif;
     margin: 0;
-    padding: 15px;
+    padding: 0; /* Removed default padding to allow header to span full width */
     background-color: #f4f4f4;
     color: #333;
+}
+
+/* Branding Header Styles */
+.branding-header {
+    background-color: #e9e9e9; /* Light grey background for the header */
+    padding: 10px 15px;
+    display: flex;
+    align-items: center; /* Vertically center items */
+    justify-content: center; /* Center items horizontally */
+    gap: 15px; /* Space between image and text */
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    border-bottom: 1px solid #ccc;
+}
+
+.coat-of-arms {
+    height: 50px; /* Adjust height as needed */
+    width: auto;
+}
+
+.service-info {
+    text-align: center; /* Center text on small screens when wrapped */
+}
+
+.service-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.service-info p:first-child {
+    font-weight: bold;
+    font-size: 1rem;
+     color: #333;
 }
 
 .container {
     max-width: 700px;
     margin: 20px auto;
-    padding: 20px;
+    padding: 20px; /* Padding for the form content */
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

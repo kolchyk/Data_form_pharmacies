@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header class="branding-header">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Lesser_Coat_of_Arms_of_Ukraine.svg" alt="Герб України" class="coat-of-arms">
+        <div class="service-info">
+            <p>Державна служба України з лікарських засобів та контролю за наркотиками</p>
+            <p>(Держлікслужба)</p>
+        </div>
+    </header>
 
     <div class="container">
         <h1>Форма збору даних про кадровий склад аптек</h1>
@@ -43,12 +50,12 @@
 
                 <div class="form-group">
                     <label for="edrpou">4. Код ЄДРПОУ:</label>
-                    <input type="text" id="edrpou" name="edrpou" pattern="\d{8,10}" title="Введіть 8 або 10 цифр ЄДРПОУ" required>
+                    <input type="text" id="edrpou" name="edrpou" pattern="\d{8,10}" title="Введіть 8 або 10 цифр ЄДРПОУ" disabled>
                 </div>
 
                 <div class="form-group">
                     <label for="network_name">5. Назва аптечної мережі або назва аптеки:</label>
-                    <input type="text" id="network_name" name="network_name" required>
+                    <input type="text" id="network_name" name="network_name" disabled>
                 </div>
 
                 <div class="form-group">
@@ -100,12 +107,12 @@
 
                 <div class="form-group">
                     <label for="staff_total">9. Кількість фарм працівників, що працюють в аптечному пункті (всього):</label>
-                    <input type="number" id="staff_total" name="staff_total" min="0" required>
+                    <input type="number" id="staff_total" name="staff_total" min="0" max="10" required>
                 </div>
 
                 <div class="form-group">
                     <label for="staff_esoz">10. Кількість фарм працівників, зареєстрованих в системі ЕСОЗ:</label>
-                    <input type="number" id="staff_esoz" name="staff_esoz" min="0" required>
+                    <input type="number" id="staff_esoz" name="staff_esoz" min="0" max="10" required>
                 </div>
 
                 <div class="form-group">

@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const aptekaSelect = document.getElementById('apteka');
     const additionalFields = document.getElementById('additional-fields');
     const edrpouInput = document.getElementById('edrpou');
+    const networkNameInput = document.getElementById('network_name');
     const form = document.getElementById('apteka-form');
     const messageContainer = document.getElementById('message-container');
     const submitButton = document.getElementById('submit-btn');
@@ -13,9 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const isNameInput = document.getElementById('is_name');
 
     // !!! ЗАМІНІТЬ ЦЕ НА ВАШУ РЕАЛЬНУ URL-АДРЕСУ GOOGLE APPS SCRIPT !!!
-    const googleAppScriptUrl = 'https://script.google.com/macros/s/AKfycbzSAornnkv2z-ngGnl1cPPrDoFoOIH08A7i4js_GXwndcmEftr-omr7hMMaMr-3YVUe/exec';
+    const googleAppScriptUrl = 'https://script.google.com/macros/s/AKfycbz3t995L8Rz2Uo-tP974279248-806251779740/exec';
 
     let pharmacyData = {}; // Структура: { oblast: { city: { apteka: edrpou } } }
+    const MANUAL_INPUT_VALUE = "--- Ввести вручну ---"; // Константа для опції ручного вводу
 
     // Функція для очищення та деактивації селекта
     const resetSelect = (selectElement, defaultOptionText) => {
@@ -23,9 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         selectElement.disabled = true;
     };
 
-    // Функція для заповнення селекта опціями
-    const populateSelect = (selectElement, options) => {
-        // Сортуємо опції за алфавітом
+    // Функція для заповнення селекта опціями + опція ручного вводу
+    const populateSelect = (selectElement, options, addManualOption = false) => {
+        // Сортуємо основні опції за алфавітом
         options.sort((a, b) => a.localeCompare(b, 'uk'));
         options.forEach(optionValue => {
             const option = document.createElement('option');
@@ -33,7 +35,27 @@ document.addEventListener('DOMContentLoaded', () => {
             option.textContent = optionValue;
             selectElement.appendChild(option);
         });
+
+        // Додаємо опцію ручного вводу, якщо потрібно
+        if (addManualOption) {
+            const manualOption = document.createElement('option');
+            manualOption.value = MANUAL_INPUT_VALUE;
+            manualOption.textContent = MANUAL_INPUT_VALUE;
+            selectElement.appendChild(manualOption);
+        }
+
         selectElement.disabled = false;
+    };
+
+    // Функція для скидання стану полів 4 і 5
+    const resetAdditionalFieldsState = () => {
+        additionalFields.style.display = 'none';
+        edrpouInput.value = '';
+        edrpouInput.required = false;
+        edrpouInput.readOnly = true; // Робимо тільки для читання за замовчуванням
+        networkNameInput.value = '';
+        networkNameInput.required = false;
+        networkNameInput.disabled = true; // Деактивуємо поле 5 за замовчуванням
     };
 
     // --- Завантаження та парсинг CSV ---
@@ -46,14 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(csvText => {
             pharmacyData = parseCSV(csvText);
-            // Заповнюємо перший селект (Області)
             const oblasti = Object.keys(pharmacyData);
-            populateSelect(oblastSelect, oblasti);
+            // Заповнюємо області (без опції ручного вводу)
+            populateSelect(oblastSelect, oblasti, false);
+            // Початково скидаємо стан дод. полів
+            resetAdditionalFieldsState();
         })
         .catch(error => {
             console.error('Помилка завантаження або парсингу CSV:', error);
             displayMessage('Помилка завантаження довідника аптек. Спробуйте оновити сторінку.', 'error');
-            // Блокуємо форму, якщо дані не завантажились
             oblastSelect.disabled = true;
             citySelect.disabled = true;
             aptekaSelect.disabled = true;
@@ -95,15 +118,15 @@ document.addEventListener('DOMContentLoaded', () => {
     oblastSelect.addEventListener('change', () => {
         resetSelect(citySelect, '-- Спочатку оберіть область --');
         resetSelect(aptekaSelect, '-- Спочатку оберіть населений пункт --');
-        additionalFields.style.display = 'none'; // Ховаємо дод. поля
-        edrpouInput.value = ''; // Очищаємо ЄДРПОУ
-        aptekaSelect.value = ''; // Скидаємо вибір аптеки
-        citySelect.value = '';   // Скидаємо вибір міста
+        resetAdditionalFieldsState(); // Скидаємо стан дод. полів
+        aptekaSelect.value = '';
+        citySelect.value = '';
 
         const selectedOblast = oblastSelect.value;
         if (selectedOblast && pharmacyData[selectedOblast]) {
             const cities = Object.keys(pharmacyData[selectedOblast]);
-            populateSelect(citySelect, cities);
+            // Заповнюємо міста (без опції ручного вводу)
+            populateSelect(citySelect, cities, false);
             resetSelect(aptekaSelect, '-- Оберіть населений пункт --');
         } else {
             resetSelect(citySelect, '-- Спочатку оберіть область --');
@@ -112,15 +135,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     citySelect.addEventListener('change', () => {
         resetSelect(aptekaSelect, '-- Спочатку оберіть населений пункт --');
-        additionalFields.style.display = 'none'; // Ховаємо дод. поля
-        edrpouInput.value = ''; // Очищаємо ЄДРПОУ
-        aptekaSelect.value = ''; // Скидаємо вибір аптеки
+        resetAdditionalFieldsState(); // Скидаємо стан дод. полів
+        aptekaSelect.value = '';
 
         const selectedOblast = oblastSelect.value;
         const selectedCity = citySelect.value;
         if (selectedOblast && selectedCity && pharmacyData[selectedOblast]?.[selectedCity]) {
             const apteki = Object.keys(pharmacyData[selectedOblast][selectedCity]);
-            populateSelect(aptekaSelect, apteki);
+            // Заповнюємо аптеки, додаючи опцію ручного вводу
+            populateSelect(aptekaSelect, apteki, true);
         } else {
              resetSelect(aptekaSelect, '-- Спочатку оберіть населений пункт --');
         }
@@ -131,16 +154,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedCity = citySelect.value;
         const selectedApteka = aptekaSelect.value;
 
+        resetAdditionalFieldsState(); // Починаємо зі скинутого стану
+
         if (selectedOblast && selectedCity && selectedApteka) {
             additionalFields.style.display = 'block'; // Показуємо дод. поля
-            const edrpou = pharmacyData[selectedOblast]?.[selectedCity]?.[selectedApteka] || '';
-            edrpouInput.value = edrpou;
-            // Можна зробити поле ЄДРПОУ тільки для читання, якщо потрібно
-            // edrpouInput.readOnly = true;
+
+            if (selectedApteka === MANUAL_INPUT_VALUE) {
+                // --- Логіка для ручного вводу --- 
+                edrpouInput.required = true;    // ЄДРПОУ обов'язковий
+                edrpouInput.readOnly = false;   // Дозволяємо редагування ЄДРПОУ
+                edrpouInput.value = '';         // Очищаємо ЄДРПОУ
+
+                networkNameInput.required = true; // Поле 5 обов'язкове
+                networkNameInput.disabled = false;// Активуємо поле 5
+                networkNameInput.value = '';      // Очищаємо поле 5
+                networkNameInput.placeholder = 'Введіть назву аптеки/мережі'; // Додаємо підказку
+
+            } else {
+                // --- Логіка для вибору зі списку --- 
+                const edrpou = pharmacyData[selectedOblast]?.[selectedCity]?.[selectedApteka] || '';
+                edrpouInput.value = edrpou;
+                edrpouInput.required = true; // ЄДРПОУ обов'язковий (навіть якщо порожній з файлу)
+                edrpouInput.readOnly = true;   // Забороняємо редагування ЄДРПОУ
+
+                networkNameInput.required = false; // Поле 5 НЕ обов'язкове
+                networkNameInput.disabled = true; // Деактивуємо поле 5
+                networkNameInput.value = selectedApteka; // Можна заповнити назвою з поля 3 для інформації
+                networkNameInput.placeholder = ''; // Забираємо підказку
+            }
         } else {
-            additionalFields.style.display = 'none';
-            edrpouInput.value = '';
-            // edrpouInput.readOnly = false;
+            // Якщо вибрано плейсхолдер, ховаємо дод. поля
+            resetAdditionalFieldsState();
         }
     });
 
@@ -167,6 +211,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(form);
         const dataToSend = {};
         formData.forEach((value, key) => {
+            // Якщо обрано ручний ввід аптеки, а поле назви мережі/аптеки деактивовано
+            // (таке не повинно трапитись з новою логікою, але про всяк випадок),
+            // можливо, варто передавати значення з поля apteka.
+            // Зараз передаємо як є.
             dataToSend[key] = value;
         });
 
@@ -201,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
              // Скидаємо стан до початкового
              resetSelect(citySelect, '-- Спочатку оберіть область --');
              resetSelect(aptekaSelect, '-- Спочатку оберіть населений пункт --');
-             additionalFields.style.display = 'none';
+             resetAdditionalFieldsState(); // Скидаємо стан дод. полів після відправки
              isNameGroup.style.display = 'none';
              isNameInput.required = false;
         })
