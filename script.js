@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isNameInput = document.getElementById('is_name');
 
     // !!! ЗАМІНІТЬ ЦЕ НА ВАШУ РЕАЛЬНУ URL-АДРЕСУ GOOGLE APPS SCRIPT !!!
-    const googleAppScriptUrl = 'https://script.google.com/macros/s/AKfycbz3t995L8Rz2Uo-tP974279248-806251779740/exec';
+    const googleAppScriptUrl = 'https://script.google.com/macros/s/AKfycbx16_JHyIVcSHep6-ljINYx3eLvQJtBVleAbuWu4ot9acDdBjxbCKRZ4PWlwx_xdoat/exec';
 
     let pharmacyData = {}; // Структура: { oblast: { city: { apteka: edrpou } } }
     const MANUAL_INPUT_VALUE = "--- Ввести вручну ---"; // Константа для опції ручного вводу
@@ -161,25 +161,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (selectedApteka === MANUAL_INPUT_VALUE) {
                 // --- Логіка для ручного вводу --- 
-                edrpouInput.required = true;    // ЄДРПОУ обов'язковий
-                edrpouInput.readOnly = false;   // Дозволяємо редагування ЄДРПОУ
                 edrpouInput.value = '';         // Очищаємо ЄДРПОУ
+                edrpouInput.readOnly = false;   // Дозволяємо редагування ЄДРПОУ
+                edrpouInput.required = true;    // ЄДРПОУ обов'язковий
 
+                networkNameInput.value = '';      // Очищаємо поле 5
                 networkNameInput.required = true; // Поле 5 обов'язкове
                 networkNameInput.disabled = false;// Активуємо поле 5
-                networkNameInput.value = '';      // Очищаємо поле 5
                 networkNameInput.placeholder = 'Введіть назву аптеки/мережі'; // Додаємо підказку
 
             } else {
                 // --- Логіка для вибору зі списку --- 
                 const edrpou = pharmacyData[selectedOblast]?.[selectedCity]?.[selectedApteka] || '';
                 edrpouInput.value = edrpou;
-                edrpouInput.required = true; // ЄДРПОУ обов'язковий (навіть якщо порожній з файлу)
                 edrpouInput.readOnly = true;   // Забороняємо редагування ЄДРПОУ
+                edrpouInput.required = true; // ЄДРПОУ обов'язковий (навіть якщо порожній з файлу)
 
-                networkNameInput.required = false; // Поле 5 НЕ обов'язкове
-                networkNameInput.disabled = true; // Деактивуємо поле 5
                 networkNameInput.value = selectedApteka; // Можна заповнити назвою з поля 3 для інформації
+                networkNameInput.disabled = true; // Деактивуємо поле 5
+                networkNameInput.required = false; // Поле 5 НЕ обов'язкове
                 networkNameInput.placeholder = ''; // Забираємо підказку
             }
         } else {
