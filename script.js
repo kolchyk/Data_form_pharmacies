@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const phoneInput = document.getElementById('phone');
 
     // !!! ЗАМІНІТЬ ЦЕ НА ВАШУ РЕАЛЬНУ URL-АДРЕСУ GOOGLE APPS SCRIPT !!!
-    const googleAppScriptUrl = 'https://script.google.com/macros/s/AKfycbyHOGkGIU89yimOARQAgGwKkV7VOB64ZWqyjgkOLjcij39RIIqOzTtblL3O5hwPy8rs/exec';
+    const googleAppScriptUrl = 'https://script.google.com/macros/s/AKfycbw50MX_UrMJllc6zb8m6lqnDYay0XW5LIoIxRVkqBRiXuTs8ZJKjMITdrhKds0kvVR2jQ/exec';
 
     let pharmacyData = {}; // Структура: { oblast: { city: { apteka: edrpou } } }
     const MANUAL_INPUT_VALUE = "--- Ввести вручну ---"; // Константа для опції ручного вводу
