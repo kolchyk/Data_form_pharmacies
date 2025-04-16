@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const esozRadioNo = document.getElementById('esoz_no');
     const isNameGroup = document.getElementById('is_name_group');
     const isNameInput = document.getElementById('is_name');
+    const phoneInput = document.getElementById('phone');
 
     // !!! ЗАМІНІТЬ ЦЕ НА ВАШУ РЕАЛЬНУ URL-АДРЕСУ GOOGLE APPS SCRIPT !!!
     const googleAppScriptUrl = 'https://script.google.com/macros/s/AKfycbx16_JHyIVcSHep6-ljINYx3eLvQJtBVleAbuWu4ot9acDdBjxbCKRZ4PWlwx_xdoat/exec';
@@ -186,6 +187,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Якщо вибрано плейсхолдер, ховаємо дод. поля
             resetAdditionalFieldsState();
         }
+    });
+
+    // --- Обробник для поля телефону для очищення вводу --- 
+    phoneInput.addEventListener('input', () => {
+        // Видаляємо будь-які символи, крім дозволених: цифри, +, -, (, ), пробіл
+        phoneInput.value = phoneInput.value.replace(/[^\d\+\-\(\)\s]/g, '');
     });
 
     // --- Обробник для поля "Чи використовує ІС" ---
